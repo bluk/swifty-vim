@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.env.yaml
+/*.xcodeproj
+/.build
+/Packages
+/build
+/docs/**/docsets/
+/docs/**/undocumented.json
