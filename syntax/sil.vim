@@ -1,5 +1,10 @@
 " Vim syntax file
 " Language: sil
+" Maintainer:       Bryant Luk <code@bryantluk.com>
+" Description:      Syntax file for sil.
+
+" Source code modified from original file:
+" https://github.com/apple/swift/blob/73df12c09f052f34985b62834f8f0fd2de4c8f10/utils/vim/syntax/sil.vim
 "
 " This source file was originally part of the Swift.org open source project
 "
@@ -9,9 +14,6 @@
 " See https://swift.org/LICENSE.txt for license information
 " See https://swift.org/CONTRIBUTORS.txt for the list of Swift project
 " authors
-"
-" Original file:
-" https://github.com/apple/swift/blob/73df12c09f052f34985b62834f8f0fd2de4c8f10/utils/vim/syntax/sil.vim
 
 if exists("b:current_syntax")
     finish
@@ -170,3 +172,5 @@ hi def link silMetatypeType Special
 hi def link silAttribute PreProc
 
 let b:current_syntax = "sil"
+
+" vim: sw=2 ts=2 et

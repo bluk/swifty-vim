@@ -1,7 +1,7 @@
 " Vim ftplugin file
 " Language:         Swift
 " Maintainer:       Bryant Luk <code@bryantluk.com>
-" Description:      Filetype plugin settings for Swift.
+" Description:      Filetype plugin settings for swifty-vim mappings.
 
 "  Copyright 2018 Bryant Luk
 "
@@ -17,26 +17,11 @@
 "  See the License for the specific language governing permissions and
 "  limitations under the License.
 
-if exists("b:did_ftplugin")
-  finish
-endif
-let b:did_ftplugin = 1
+nnoremap <silent> <Plug>(swift-spm-build) :<C-u>call swift#spm#Build({})<CR>
+nnoremap <silent> <Plug>(swift-spm-test) :<C-u>call swift#spm#Test({})<CR>
+nnoremap <silent> <Plug>(swift-spm-test-function-only) :<C-u>call swift#spm#TestFunctionOnly({})<CR>
 
-if !exists("g:swift_jump_to_error")
-  let g:swift_jump_to_error = 1
-endif
-
-setlocal comments=s1:/*,mb:*,ex:*/,:///,://
-setlocal commentstring=//\ %s
-
-augroup swiftyvim
-  autocmd!
-
-  if strlen(findfile("Package.swift", expand('%:p:h') . ";")) > 0
-    compiler spm
-  else
-    compiler swiftc
-  endif
-augroup end
+nnoremap <silent> <Plug>(swift-swiftformat) :<C-u>call swift#swiftformat#Format({})<CR>
+nnoremap <silent> <Plug>(swift-swiftlint) :<C-u>call swift#swiftlint#Lint({})<CR>
 
 " vim: sw=2 ts=2 et

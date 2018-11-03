@@ -1,6 +1,11 @@
 " Vim syntax file
 " Language: swift
+" Maintainer:       Bryant Luk <code@bryantluk.com>
+" Description:      Syntax file for Swift.
 
+" Source code modified from original file:
+" https://github.com/apple/swift/blob/ea2c860ddb4817dc83c7152035aa05569f3a2770/utils/vim/syntax/swift.vim
+"
 " This source file was originally part of the Swift.org open source project
 "
 " Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
@@ -9,9 +14,6 @@
 " See https://swift.org/LICENSE.txt for license information
 " See https://swift.org/CONTRIBUTORS.txt for the list of Swift project
 " authors
-"
-" Original file:
-" https://github.com/apple/swift/blob/ea2c860ddb4817dc83c7152035aa05569f3a2770/utils/vim/syntax/swift.vim
 
 if exists("b:current_syntax")
     finish
@@ -168,7 +170,7 @@ syn match swiftHex /[+\-]\?\<0x[0-9A-Fa-f][0-9A-Fa-f_]*\(\([.][0-9A-Fa-f_]*\)\?[
 syn match swiftOct /[+\-]\?\<0o[0-7][0-7_]*\>/
 syn match swiftBin /[+\-]\?\<0b[01][01_]*\>/
 
-syn match swiftOperator +\.\@<!\.\.\.\@!\|[/=\-+*%<>!&|^~]\@<!\(/[/*]\@![/=\-+*%<>!&|^~]*\|*/\@![/=\-+*%<>!&|^~]*\|->\@![/=\-+*%<>!&|^~]*\|[=+%<>!&|^~][/=\-+*%<>!&|^~]*\)+ skipwhite skipempty nextgroup=swiftTypeParameters
+syn match swiftOperator "+\.\@<!\.\.\.\@!\|[/=\-+*%<>!&|^~]\@<!\(/[/*]\@![/=\-+*%<>!&|^~]*\|*/\@![/=\-+*%<>!&|^~]*\|->\@![/=\-+*%<>!&|^~]*\|[=+%<>!&|^~][/=\-+*%<>!&|^~]*\)+" skipwhite skipempty nextgroup=swiftTypeParameters
 syn match swiftOperator "\.\.[<.]" skipwhite skipempty nextgroup=swiftTypeParameters
 
 syn match swiftChar /'\([^'\\]\|\\\(["'tnr0\\]\|x[0-9a-fA-F]\{2}\|u[0-9a-fA-F]\{4}\|U[0-9a-fA-F]\{8}\)\)'/
@@ -239,3 +241,5 @@ hi def link swiftNilOps Operator
 hi def link swiftScope PreProc
 
 let b:current_syntax = "swift"
+
+" vim: sw=2 ts=2 et

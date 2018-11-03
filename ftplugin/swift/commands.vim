@@ -1,7 +1,7 @@
 " Vim ftplugin file
 " Language:         Swift
 " Maintainer:       Bryant Luk <code@bryantluk.com>
-" Description:      Filetype plugin settings for Swift.
+" Description:      Filetype plugin settings for swifty-vim commands.
 
 "  Copyright 2018 Bryant Luk
 "
@@ -17,26 +17,17 @@
 "  See the License for the specific language governing permissions and
 "  limitations under the License.
 
-if exists("b:did_ftplugin")
-  finish
-endif
-let b:did_ftplugin = 1
+" -- swift package manager
+command! -nargs=* SwiftPMBuild call swift#spm#Build({}, <f-args>)
+command! -nargs=* SwiftPMSourceBuild call swift#spm#SourceBuild({}, <f-args>)
+command! -nargs=* SwiftPMTest call swift#spm#Test({}, <f-args>)
+command! -nargs=* SwiftPMTestBuild call swift#spm#Test({ "only_compile": 1 }, <f-args>)
+command! -nargs=* SwiftPMTestFunctionOnly call swift#spm#TestFunctionOnly({}, <f-args>)
 
-if !exists("g:swift_jump_to_error")
-  let g:swift_jump_to_error = 1
-endif
+" -- swiftformat
+command! -nargs=* SwiftFormat call swift#swiftformat#Format({}, <f-args>)
 
-setlocal comments=s1:/*,mb:*,ex:*/,:///,://
-setlocal commentstring=//\ %s
-
-augroup swiftyvim
-  autocmd!
-
-  if strlen(findfile("Package.swift", expand('%:p:h') . ";")) > 0
-    compiler spm
-  else
-    compiler swiftc
-  endif
-augroup end
+" -- swiftlint
+command! -nargs=* SwiftLint call swift#swiftlint#Lint({}, <f-args>)
 
 " vim: sw=2 ts=2 et

@@ -1,0 +1,277 @@
+*swifty-vim.txt*      Swift development plugin
+*swifty-vim*
+
+==============================================================================
+CONTENTS                                                      *swift-contents*
+
+1. Introduction                                                  |swift-intro|
+2. Settings                                                   |swift-settings|
+3. Commands                                                   |swift-commands|
+4. Mappings                                                   |swift-mappings|
+
+==============================================================================
+INTRODUCTION                                                     *swift-intro*
+
+A Vim plugin for the Swift programming language. It provides file detection,
+syntax highlighting, support for compiling and running tests, and optional
+support for formatting and linting tools.
+
+==============================================================================
+SETTINGS                                                      *swift-settings*
+
+You can change the settings in your vimrc.
+                                                   *g:swift_compiler_spm_path*
+g:swift_compiler_spm_path~
+  Set this option to the path to swift. If unset, "swift" will be located
+  in the $PATH: >
+
+	    let g:swiftc_compiler_spm_path = "/usr/bin/swift"
+<
+                                                *g:swift_compiler_spm_options*
+g:swift_compiler_spm_options~
+  Set this option to any swift compiler options. If unset, no extra options
+  will be passed to swift. Defaults to "build". >
+
+	    let g:swiftc_compiler_spm_options = "build"
+<
+                                                *g:swift_compiler_swiftc_path*
+g:swift_compiler_swiftc_path~
+  Set this option to the path to swiftc. If unset, "swiftc" will be located
+  in the $PATH: >
+
+	    let g:swiftc_compiler_swiftc_path = "/usr/bin/swiftc"
+<
+                                             *g:swift_compiler_swiftc_options*
+g:swift_compiler_swiftc_options~
+  Set this option to any swiftc compiler options. If unset, no extra options
+  will be passed to swiftc. >
+
+	    let g:swiftc_compiler_swiftc_options = "-D DEBUG"
+<
+                                 *g:swift_compiler_swiftc_makeprog_no_percent*
+g:swift_compiler_swiftc_makeprog_no_percent~
+  Set this option to 1 to not include the file name when calling "swiftc". >
+
+	    let g:swift_compiler_swiftc_makeprog_no_percent = 1
+<
+
+                                                       *g:swift_jump_to_error*
+g:swift_jump_to_error~
+  Set this option to 0 to not immediately jump to the first error in a list. >
+
+	    let g:swift_jump_to_error = 0
+<
+
+                                                      *g:swift_list_autoclose*
+g:swift_list_autoclose~
+  Set this option to 0 to not automatically close a list if there are no
+  errors. >
+
+	    let g:swift_list_autoclose = 0
+<
+
+                                                         *g:swift_list_height*
+g:swift_list_height~
+  Set this option to the exact height which lists should be opened with.
+  Unset or set to 0 to allow lists to be automatically sized. >
+
+	    let g:swift_list_height = 5
+<
+                                                           *g:swift_list_type*
+g:swift_list_type~
+  Set this option to always use a specific list type when parsing messages. >
+
+	    let g:swift_list_type = "locationlist"
+<
+                                                  *g:swift_list_type_commands*
+g:swift_list_type_commands~
+  Set this option to a dictionary where the key is the list type and the
+  value is the type of list to use. >
+
+	    let g:swift_list_type_commands = { "SwiftBuild": "locationlist" }
+<
+                                                       *g:swift_version_check*
+g:swift_version_check~
+  Set this option to 0 to not check for the version of Vim being used. >
+
+	    let g:swift_version_check = 0
+<
+
+Integration with SwiftFormat                               *swift-swiftformat*
+----------------------------
+
+This plugin can use SwiftFormat to format code. SwiftFormat must be installed
+separately.
+
+                                                *g:swift_swiftformat_autosave*
+g:swift_swiftformat_autosave~
+  Set this option to 1 to automatically invoke SwiftFormat when saving. >
+
+	    let g:swift_swiftformat_autosave = 0
+<
+                                        *g:swift_swiftformat_config_file_path*
+g:swift_swiftformat_config_file_path~
+  Set this option to a global SwiftFormat file path which will always
+  be used. >
+
+	    let g:swift_swiftformat_config_file_path =
+	      \ $HOME . "/.swiftformat"
+<
+                                        *g:swift_swiftformat_config_file_name*
+g:swift_swiftformat_config_file_name~
+  Set this option to the name of the SwiftFormat config to search for.
+  Defaults to ".swiftformat". >
+
+	    let g:swift_swiftformat_config_file_name = ".swiftformat"
+<
+
+                           *g:swift_swiftformat_config_file_search_parent_dir*
+g:swift_swiftformat_config_file_search_parent_dir~
+  Set this option to 1 to find the |g:swift_swiftformat_config_file_name| in
+  the current or parent directories. Defaults to 1. >
+
+	    let g:swift_swiftformat_config_file_search_parent_dir = 0
+<
+                                           *g:swift_swiftformat_fail_silently*
+g:swift_swiftformat_fail_silently~
+  Set this option to 1 to let SwiftFormat fail silently. >
+
+	    let g:swift_swiftformat_fail_silently = 1
+<
+                                                 *g:swift_swiftformat_options*
+g:swift_swiftformat_options~
+  Set this option to a list of any SwiftFormat options to use. >
+
+	    let g:swift_swiftformat_options = ["--enable", "trailingCommas"]
+<
+                                                    *g:swift_swiftformat_path*
+g:swift_swiftformat_path~
+  Set this option to the specific SwiftFormat path to use. >
+
+	    let g:swift_swiftformat_path = "/usr/local/bin/swiftformat"
+<
+
+Integration with SwiftLint                                   *swift-swiftlint*
+----------------------------
+
+This plugin can use SwiftLint to lint code. SwiftLint must be installed
+separately.
+
+                                                  *g:swift_swiftlint_autosave*
+g:swift_swiftlint_autosave~
+  Set this option to 1 to automatically invoke SwiftLint when saving. >
+
+	    let g:swift_swiftlint_autosave = 1
+<
+                                          *g:swift_swiftlint_config_file_path*
+g:swift_swiftlint_config_file_path~
+  Set this option to a global SwiftLint file path which will always
+  be used. >
+
+	    let g:swift_swiftlint_config_file_path = $HOME . "/swiftlint.yml"
+<
+                                          *g:swift_swiftlint_config_file_name*
+g:swift_swiftlint_config_file_name~
+  Set this option to the name of the SwiftLint config to search for.
+  Defaults to ".swiftlint.yml". >
+
+	    let g:swift_swiftlint_config_file_name = ".swiftlint.yml"
+<
+                             *g:swift_swiftlint_config_file_search_parent_dir*
+g:swift_swiftlint_config_file_search_parent_dir~
+  Set this option to 1 to find the |g:swift_swiftlint_config_file_name| in
+  the current or parent directories. Defaults to 1. >
+
+	    let g:swift_swiftlint_config_file_search_parent_dir = 0
+<
+                                              *g:swift_swiftlint_from_package*
+g:swift_swiftlint_from_package~
+  Set this option to 1 to run against the entire Swift Package instead of a
+  single file. >
+
+	    let g:swift_swiftlint_from_package = 1
+<
+                                                   *g:swift_swiftlint_options*
+g:swift_swiftlint_options~
+  Set this option to a list of any SwiftLint options to use. >
+
+	    let g:swift_swiftlint_options = ["--enable", "trailingCommas"]
+<
+                                                      *g:swift_swiftlint_path*
+g:swift_swiftlint_path~
+  Set this option to the specific SwiftLint path to use. >
+
+	    let g:swift_swiftlint_path = "/usr/local/bin/swiftlint"
+<
+
+==============================================================================
+COMMANDS                                                      *swift-commands*
+
+Swift Package Manager
+---------------------
+
+Convenience commands for working with Swift Package Manager packages.
+
+:SwiftPMBuild <args>                                           *:SwiftPMBuild*
+                Runs 'swift build' or 'swift build --build-tests' (depending
+		on the file) with the provided arguments.
+
+:SwiftPMSourceBuild <args>                               *:SwiftPMSourceBuild*
+                Runs 'swift build' with the provided arguments.
+
+:SwiftPMTest <args>                                             *:SwiftPMTest*
+                Runs 'swift test' with the provided arguments.
+
+:SwiftPMTestBuild <args>                                   *:SwiftPMTestBuild*
+                Runs 'swift build --build-tests' with the provided arguments.
+
+:SwiftPMTestFunctionOnly <args>                     *:SwiftPMTestFunctionOnly*
+                Runs 'swift test --filter <current test func>' with the
+		provided arguments.
+
+Formatting
+----------
+
+:SwiftFormat                                                    *:SwiftFormat*
+		Runs |g:swift_swiftformat_path| on the current buffer. If
+		|g:swift_swiftformat_options| is set, then the options will
+		be used.
+
+		If |g:swift_swiftformat_fail_silently| is 0 (the default),
+		then a list will be populated with any errors.
+	        If |g:swift_swiftformat_fail_silently| is set to 1,
+		then it will not populate any list with any errors.
+
+
+Linting
+-------------------
+
+:SwiftLint                                                        *:SwiftLint*
+		Runs |g:swift_swiftlint_path| on the current buffer.
+
+==============================================================================
+MAPPINGS                                                      *swift-mappings*
+
+There are <Plug> keys defined which can be mapped to with custom key bindings.
+You can map to a <Plug> key by doing the following:
+
+  autocmd FileType swift nmap <leader>t <Plug>(swift-spm-test)
+
+
+                                                            *(swift-spm-build)*
+Builds the current Swift Package with `swift build`.
+
+                                                             *(swift-spm-test)*
+Tests the current Swift Package with `swift test`.
+
+                                               *(swift-spm-test-function-only)*
+Tests the current test function with `swift test`.
+
+                                                         *(swift-swiftformat)*
+Runs `swiftformat` on the current buffer.
+
+                                                           *(swift-swiftlint)*
+Runs `swiftlint` on the current buffer.
+
+==============================================================================
+ vim:tw=78:sw=4:noet:ts=8:ft=help:norl:
