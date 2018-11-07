@@ -114,6 +114,29 @@ function! swift#spm#TestFunctionOnly(opts, ...) abort
   call call('swift#spm#Test', l:args)
 endfunction
 
+function! swift#spm#GenerateXcodeProject(...) abort
+  let l:opts = (a:0 > 0) ? copy(a:1) : {}
+  let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
+        \ : g:swift_jump_to_error
+
+  let l:command = [g:swift_compiler_spm_path, 'package', 'generate-xcodeproj']
+  call extend(l:command, map(copy(a:000[1:]), "expand(v:val)"))
+
+  let l:current_dir = getcwd()
+  let l:cd = exists('*haslocaldir') && haslocaldir() ? 'lcd' : 'cd'
+  try
+    execute l:cd expand('%:p:h')
+    silent let l:out = systemlist(join(l:command, " "))
+    if v:shell_error == 0
+      call swift#echo#EchoSuccess(l:out)
+    else
+      call swift#echo#EchoError(l:out)
+    endif
+  finally
+    execute l:cd fnameescape(l:current_dir)
+  endtry
+endfunction
+
 function! swift#spm#FindPackageSwiftDir() abort
   let l:package_swift = findfile("Package.swift", expand('%:p:h') . ";")
   if empty(l:package_swift)

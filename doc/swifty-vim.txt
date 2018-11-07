@@ -229,6 +229,9 @@ Convenience commands for working with Swift Package Manager packages.
                 Runs 'swift test --filter <current test func>' with the
 		provided arguments.
 
+:SwiftPMGenerateXcodeProject <args>             *:SwiftPMGenerateXcodeProject*
+                Runs 'swift package generate-xcodeproj' with the provided
+		arguments.
 Formatting
 ----------
 
@@ -258,14 +261,17 @@ You can map to a <Plug> key by doing the following:
   autocmd FileType swift nmap <leader>t <Plug>(swift-spm-test)
 
 
-                                                            *(swift-spm-build)*
+                                                           *(swift-spm-build)*
 Builds the current Swift Package with `swift build`.
 
-                                                             *(swift-spm-test)*
+                                                            *(swift-spm-test)*
 Tests the current Swift Package with `swift test`.
 
-                                               *(swift-spm-test-function-only)*
+                                              *(swift-spm-test-function-only)*
 Tests the current test function with `swift test`.
+
+                                              *(swift-spm-generate-xcodeproj)*
+Uses Swift Package Manager to generate the Xcode project.
 
                                                          *(swift-swiftformat)*
 Runs `swiftformat` on the current buffer.
