@@ -23,6 +23,7 @@ command! -nargs=* SwiftPMSourceBuild call swift#spm#SourceBuild({}, <f-args>)
 command! -nargs=* SwiftPMTest call swift#spm#Test({}, <f-args>)
 command! -nargs=* SwiftPMTestBuild call swift#spm#Test({ "only_compile": 1 }, <f-args>)
 command! -nargs=* SwiftPMTestFunctionOnly call swift#spm#TestFunctionOnly({}, <f-args>)
+command! -nargs=* SwiftPMTestGenerateLinuxMain call swift#spm#TestGenerateLinuxMain({}, <f-args>)
 command! -nargs=* SwiftPMGenerateXcodeProject call swift#spm#GenerateXcodeProject({}, <f-args>)
 
 " -- swiftformat

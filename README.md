@@ -67,6 +67,10 @@ autocmd FileType swift nmap <leader>b <Plug>(swift-spm-build)
 autocmd FileType swift nmap <leader>t <Plug>(swift-spm-test)
 " Run the test under the current cursor.
 autocmd FileType swift nmap <leader>ft <Plug>(swift-spm-test-function-only)
+" Run swift package generate-xcodeproj
+autocmd FileType swift nmap <leader>sgx <Plug>(swift-spm-generate-xcodeproj)
+" Run swift test --generate-linux-main
+autocmd FileType swift nmap <leader>sgl <Plug>(swift-spm-test-generate-linuxmain)
 
 " Run SwiftFormat on save.
 let g:swift_swiftformat_autosave = 1

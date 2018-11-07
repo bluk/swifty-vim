@@ -21,6 +21,12 @@ if !exists("g:swift_compiler_spm_path")
   let g:swift_compiler_spm_path = "swift"
 endif
 
+let s:format=",%E%f:%l:%c: error: %m"
+let s:format.=",%W%f:%l:%c: warning: %m"
+let s:format.=",%E%f:%l: error: %.%# : %m"
+let s:format.=",%W%f:%l: warning: %.%# : %m"
+let s:format.=",%-G%.%#"
+
 function! swift#spm#Build(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
 
@@ -75,12 +81,6 @@ function! swift#spm#Test(...) abort
 
   call extend(l:args, map(copy(a:000[1:]), "expand(v:val)"))
 
-  let l:format=",%E%f:%l:%c: error: %m"
-  let l:format.=",%W%f:%l:%c: warning: %m"
-  let l:format.=",%E%f:%l: error: %.%# : %m"
-  let l:format.=",%W%f:%l: warning: %.%# : %m"
-  let l:format.=",%-G%.%#"
-
   let l:list_title = "SwiftTest"
   let l:list_type = swift#list#Type(l:list_title)
   call swift#job#Spawn({
@@ -89,7 +89,7 @@ function! swift#spm#Test(...) abort
         \ 'list_title': l:list_title,
         \ 'list_type': l:list_type,
         \ 'status_type': l:only_compile ? 'compile test' : 'test',
-        \ 'errorformat': l:format,
+        \ 'errorformat': s:format,
         \ 'job_dir': swift#spm#FindPackageSwiftDir(),
         \ })
 endfunction
@@ -112,6 +112,27 @@ function! swift#spm#TestFunctionOnly(opts, ...) abort
   call extend(l:args, a:000[1:])
 
   call call('swift#spm#Test', l:args)
+endfunction
+
+function! swift#spm#TestGenerateLinuxMain(...) abort
+  let l:opts = (a:0 > 0) ? copy(a:1) : {}
+  let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
+        \ : g:swift_jump_to_error
+
+  let l:args = ["test", "--generate-linuxmain"]
+  call extend(l:args, map(copy(a:000[1:]), "expand(v:val)"))
+
+  let l:list_title = "SwiftTest"
+  let l:list_type = swift#list#Type(l:list_title)
+  call swift#job#Spawn({
+        \ 'cmd': [g:swift_compiler_spm_path] + l:args,
+        \ 'jump_to_error': l:jump_to_error,
+        \ 'list_title': l:list_title,
+        \ 'list_type': l:list_type,
+        \ 'status_type': 'test generate-linuxmain',
+        \ 'errorformat': s:format,
+        \ 'job_dir': swift#spm#FindPackageSwiftDir(),
+        \ })
 endfunction
 
 function! swift#spm#GenerateXcodeProject(...) abort

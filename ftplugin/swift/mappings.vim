@@ -21,6 +21,7 @@ nnoremap <silent> <Plug>(swift-spm-build) :<C-u>call swift#spm#Build({})<CR>
 nnoremap <silent> <Plug>(swift-spm-test) :<C-u>call swift#spm#Test({})<CR>
 nnoremap <silent> <Plug>(swift-spm-test-function-only) :<C-u>call swift#spm#TestFunctionOnly({})<CR>
 nnoremap <silent> <Plug>(swift-spm-generate-xcodeproj) :<C-u>call swift#spm#GenerateXcodeProject({})<CR>
+nnoremap <silent> <Plug>(swift-spm-test-generate-linuxmain) :<C-u>call swift#spm#TestGenerateLinuxMain({})<CR>
 
 nnoremap <silent> <Plug>(swift-swiftformat) :<C-u>call swift#swiftformat#Format({})<CR>
 nnoremap <silent> <Plug>(swift-swiftlint) :<C-u>call swift#swiftlint#Lint({})<CR>
