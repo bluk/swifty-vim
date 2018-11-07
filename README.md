@@ -78,8 +78,18 @@ let g:swift_swiftlint_autosave = 1
 
 Help can be found in the included [documentation][doc_dir].
 
-Run `:help swifty-vim` in Vim. Helptags (`:Helptags`) may need to be generated for navigation. See your
-plugin manager or the helptags documentation (`:help helptags`) for more information.
+Run `:help swifty-vim` in Vim. Helptags (`:Helptags`) may need to be generated
+for navigation. See your plugin manager or the helptags documentation
+(`:help helptags`) for more information.
+
+## Related Links
+
+You may be interested in other similar projects:
+
+* [Upcoming Apple Language Server Protocol support][apple_lsp] for code
+  completion, jump to definition, etc.
+* [swift.vim][swift_vim]
+* [vim-swift][vim-swift]
 
 ## License
 
@@ -99,3 +109,6 @@ plugin manager or the helptags documentation (`:help helptags`) for more informa
 [dein.vim]: https://github.com/Shougo/dein.vim
 [vundle]: https://github.com/gmarik/vundle
 [doc_dir]: doc/
+[swift_vim]: https://github.com/keith/swift.vim
+[vim-swift]: https://github.com/toyamarinyon/vim-swift
+[apple_lsp]: https://forums.swift.org/t/new-lsp-language-service-supporting-swift-and-c-family-languages-for-any-editor-and-platform/17024/41
