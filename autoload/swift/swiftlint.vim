@@ -45,11 +45,26 @@ if !exists("g:swift_swiftlint_from_package")
   let g:swift_swiftlint_from_package = 0
 endif
 
+let s:list_title = "SwiftLint"
+
+let s:format=",%E%f:%l:%c: error: %m"
+let s:format.=",%W%f:%l:%c: warning: %m"
+let s:format.=",%E%f:%l: error: %m"
+let s:format.=",%W%f:%l: warning: %m"
+let s:format.=",%-G%.%#"
+
 function! swift#swiftlint#Lint(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
   let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
         \ : g:swift_jump_to_error
-  let l:autosave = has_key(l:opts, 'autosave') ? l:opts.autosave : 0
+  let l:on_autosave = has_key(l:opts, 'on_autosave') ? l:opts.on_autosave : 0
+
+  let l:list_should_clean = !l:on_autosave && g:swift_list_clean
+  let l:list_type = swift#list#Type(s:list_title, l:on_autosave)
+
+  if l:list_should_clean
+    call swift#list#Clean(l:list_type)
+  endif
 
   let l:args = []
 
@@ -71,32 +86,27 @@ function! swift#swiftlint#Lint(...) abort
 
   call extend(l:args, map(copy(a:000[1:]), "expand(v:val)"))
 
-  if l:autosave
+  if l:on_autosave
     redraw
   endif
 
-  let l:format=",%E%f:%l:%c: error: %m"
-  let l:format.=",%W%f:%l:%c: warning: %m"
-  let l:format.=",%E%f:%l: error: %m"
-  let l:format.=",%W%f:%l: warning: %m"
-  let l:format.=",%-G%.%#"
-
-  let l:list_title = l:autosave ? "SwiftLintAutoSave" : "SwiftLint"
-  let l:list_type = swift#list#Type(l:list_title)
   call swift#job#Spawn({
         \ 'cmd' : [g:swift_swiftlint_path] + l:args,
         \ 'jump_to_error': l:jump_to_error,
-        \ 'list_title': l:list_title,
+        \ 'on_autosave': l:on_autosave,
+        \ 'list_title': s:list_title,
         \ 'list_type': l:list_type,
         \ 'status_type': "swiftlint",
-        \ 'errorformat': l:format,
+        \ 'errorformat': s:format,
         \ 'job_dir': l:job_dir,
         \ })
 endfunction
 
 function! swift#swiftlint#PostWrite() abort
   if get(g:, "swift_swiftlint_autosave", 0)
-    call swift#swiftlint#Lint({ "autosave": 1 })
+    let l:list_type = swift#list#Type(s:list_title, 1)
+    call swift#autosave#CleanIfNeeded(l:list_type)
+    call swift#swiftlint#Lint({ "on_autosave": 1 })
   endif
 endfunction
 

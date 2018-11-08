@@ -70,6 +70,21 @@ g:swift_list_autoclose~
 	    let g:swift_list_autoclose = 0
 <
 
+                                                          *g:swift_list_clean*
+g:swift_list_clean~
+  Set this option to 0 to not clear lists when invoking commands or
+  mappings manually. Defaults to 1. >
+
+	    let g:swift_list_clean = 0
+<
+                                              *g:swift_list_clean_on_autosave*
+g:swift_list_clean_on_autosave~
+  Set this option to 0 to not clear lists when invoking commands or
+  mappings automatically during autosave. Defaults to 1. >
+
+	    let g:swift_list_clean_on_autosave = 0
+<
+
                                                          *g:swift_list_height*
 g:swift_list_height~
   Set this option to the exact height which lists should be opened with.

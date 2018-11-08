@@ -17,10 +17,6 @@
 "  See the License for the specific language governing permissions and
 "  limitations under the License.
 
-if !exists("g:swift_compiler_spm_path")
-  let g:swift_compiler_spm_path = "swift"
-endif
-
 let s:format=",%E%f:%l:%c: error: %m"
 let s:format.=",%W%f:%l:%c: warning: %m"
 let s:format.=",%E%f:%l: error: %.%# : %m"
@@ -52,14 +48,22 @@ function! swift#spm#SourceBuild(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
   let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
         \ : g:swift_jump_to_error
+  let l:on_autosave = has_key(l:opts, 'on_autosave') ? l:opts.on_autosave : 0
+
+  let l:list_should_clean = !l:on_autosave && g:swift_list_clean
+  let l:list_title = "SwiftPMBuild"
+  let l:list_type = swift#list#Type(l:list_title, l:on_autosave)
+
+  if l:list_should_clean
+    call swift#list#Clean(l:list_type)
+  endif
 
   let l:args = ['build'] + map(copy(a:000[1:]), "expand(v:val)")
 
-  let l:list_title = "SwiftBuild"
-  let l:list_type = swift#list#Type(l:list_title)
   call swift#job#Spawn({
         \ 'cmd': [g:swift_compiler_spm_path] + l:args,
         \ 'jump_to_error': l:jump_to_error,
+        \ 'on_autosave': l:on_autosave,
         \ 'list_title': l:list_title,
         \ 'list_type': l:list_type,
         \ 'status_type': 'build',
@@ -71,7 +75,16 @@ function! swift#spm#Test(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
   let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
         \ : g:swift_jump_to_error
+  let l:on_autosave = has_key(l:opts, 'on_autosave') ? l:opts.on_autosave : 0
   let l:only_compile = has_key(l:opts, 'only_compile') ? l:opts.only_compile : 0
+
+  let l:list_should_clean = !l:on_autosave && g:swift_list_clean
+  let l:list_title = "SwiftPMTest"
+  let l:list_type = swift#list#Type(l:list_title, l:on_autosave)
+
+  if l:list_should_clean
+    call swift#list#Clean(l:list_type)
+  endif
 
   if l:only_compile == 1
     let l:args = ["build", "--build-tests"]
@@ -81,11 +94,10 @@ function! swift#spm#Test(...) abort
 
   call extend(l:args, map(copy(a:000[1:]), "expand(v:val)"))
 
-  let l:list_title = "SwiftTest"
-  let l:list_type = swift#list#Type(l:list_title)
   call swift#job#Spawn({
         \ 'cmd': [g:swift_compiler_spm_path] + l:args,
         \ 'jump_to_error': l:jump_to_error,
+        \ 'on_autosave': l:on_autosave,
         \ 'list_title': l:list_title,
         \ 'list_type': l:list_type,
         \ 'status_type': l:only_compile ? 'compile test' : 'test',
@@ -118,15 +130,23 @@ function! swift#spm#TestGenerateLinuxMain(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
   let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
         \ : g:swift_jump_to_error
+  let l:on_autosave = has_key(l:opts, 'on_autosave') ? l:opts.on_autosave : 0
+
+  let l:list_should_clean = !l:on_autosave && g:swift_list_clean
+  let l:list_title = "SwiftPMTest"
+  let l:list_type = swift#list#Type(l:list_title, l:on_autosave)
+
+  if l:list_should_clean
+    call swift#list#Clean(l:list_type)
+  endif
 
   let l:args = ["test", "--generate-linuxmain"]
   call extend(l:args, map(copy(a:000[1:]), "expand(v:val)"))
 
-  let l:list_title = "SwiftTest"
-  let l:list_type = swift#list#Type(l:list_title)
   call swift#job#Spawn({
         \ 'cmd': [g:swift_compiler_spm_path] + l:args,
         \ 'jump_to_error': l:jump_to_error,
+        \ 'on_autosave': l:on_autosave,
         \ 'list_title': l:list_title,
         \ 'list_type': l:list_type,
         \ 'status_type': 'test generate-linuxmain',
@@ -139,6 +159,7 @@ function! swift#spm#GenerateXcodeProject(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
   let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
         \ : g:swift_jump_to_error
+  let l:on_autosave = has_key(l:opts, 'on_autosave') ? l:opts.on_autosave : 0
 
   let l:command = [g:swift_compiler_spm_path, 'package', 'generate-xcodeproj']
   call extend(l:command, map(copy(a:000[1:]), "expand(v:val)"))

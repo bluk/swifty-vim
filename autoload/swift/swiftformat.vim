@@ -45,10 +45,26 @@ if !exists("g:swift_swiftformat_options")
   let g:swift_swiftformat_options = []
 endif
 
+let s:list_title = "SwiftFormat"
+
+let s:format="%E%f:error: %m at %l:%c"
+let s:format.=",%W%f:warning: %m at %l:%c"
+let s:format.=",%E%f:error: %m"
+let s:format.=",%W%f:warning: %m"
+let s:format.=",%-G%.%#"
+
 function! swift#swiftformat#Format(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
   let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
         \ : g:swift_jump_to_error
+  let l:on_autosave = has_key(l:opts, 'on_autosave') ? l:opts.on_autosave : 0
+
+  let l:list_should_clean = !l:on_autosave && g:swift_list_clean
+  let l:list_type = swift#list#Type(s:list_title, l:on_autosave)
+
+  if l:list_should_clean
+    call swift#list#Clean(l:list_type)
+  endif
 
   mkview!
 
@@ -70,8 +86,6 @@ function! swift#swiftformat#Format(...) abort
   let l:stderr = readfile(l:stderr_tmpname)
   call delete(l:stderr_tmpname)
 
-  let l:list_type = swift#list#Type("SwiftFormat")
-
   if v:shell_error == 0
     try | silent undojoin | catch | endtry
 
@@ -80,13 +94,8 @@ function! swift#swiftformat#Format(...) abort
 
     silent! execute '%!cat ' . l:output_tmpname
 
-    if l:list_type ==# "quickfix"
-      let l:list_title = getqflist({'title': 1})
-    else
-      let l:list_title = getloclist(0, {'title': 1})
-    endif
-    if has_key(l:list_title, "title") && l:list_title['title'] ==# "Format"
-      call swift#list#Clean(l:list_type)
+    if empty(swift#list#Get(l:list_type))
+      call swift#list#Close(l:list_type)
     endif
 
     silent! loadview
@@ -98,13 +107,7 @@ function! swift#swiftformat#Format(...) abort
     " Hack in the filename to the beginning of the error output.
     let l:stderr = map(copy(l:stderr), "'" . expand('%') . ":'" . ' . v:val')
 
-    let l:format="%E%f:error: %m at %l:%c"
-    let l:format.=",%W%f:warning: %m at %l:%c"
-    let l:format.=",%E%f:error: %m"
-    let l:format.=",%W%f:warning: %m"
-    let l:format.=",%-G%.%#"
-
-    call swift#list#ParseFormat(l:list_type, l:format, l:stderr, 'Format')
+    call swift#list#ParseFormat(l:list_type, s:format, l:stderr, s:list_title, l:on_autosave)
     let errors = swift#list#Get(l:list_type)
     if empty(errors)
       call swift#echo#EchoError(l:stderr)
@@ -128,7 +131,9 @@ endfunction
 
 function! swift#swiftformat#PreWrite() abort
   if get(g:, "swift_swiftformat_autosave", 0)
-    call swift#swiftformat#Format({})
+    let l:list_type = swift#list#Type(s:list_title, 1)
+    call swift#autosave#CleanIfNeeded(l:list_type)
+    call swift#swiftformat#Format({ "on_autosave": 1 })
   endif
 endfunction
 

@@ -26,6 +26,18 @@ if !exists("g:swift_jump_to_error")
   let g:swift_jump_to_error = 1
 endif
 
+if !exists("g:swift_list_clean")
+  let g:swift_list_clean = 1
+endif
+
+if !exists("g:swift_list_clean_on_autosave")
+  let g:swift_list_clean_on_autosave = 1
+endif
+
+if !exists("g:swift_compiler_spm_path")
+  let g:swift_compiler_spm_path = "swift"
+endif
+
 setlocal comments=s1:/*,mb:*,ex:*/,:///,://
 setlocal commentstring=//\ %s
 

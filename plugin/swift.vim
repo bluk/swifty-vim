@@ -50,6 +50,7 @@ call s:check_version()
 augroup swiftyvim.events
   autocmd!
 
+  autocmd BufWritePre *.swift call swift#autosave#Start()
   autocmd BufWritePre *.swift call swift#swiftformat#PreWrite()
   autocmd BufWritePost *.swift call swift#swiftlint#PostWrite()
 augroup end

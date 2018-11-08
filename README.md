@@ -78,6 +78,8 @@ autocmd FileType swift nmap <leader>sgl <Plug>(swift-spm-test-generate-linuxmain
 let g:swift_swiftformat_autosave = 1
 " Run SwiftLint on save.
 let g:swift_swiftlint_autosave = 1
+" If there are errors during autosave, add all errors in the quickfix window.
+let g:swift_list_type_commands = { 'Autosave': 'quickfix' }
 ```
 
 ## Documentation / Help

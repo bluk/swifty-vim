@@ -80,17 +80,47 @@ function! swift#list#Get(list_type) abort
   endif
 endfunction
 
-function! swift#list#ParseFormat(list_type, format, items, title) abort
+function! swift#list#ParseFormat(list_type, format, items, title, keep_existing_items) abort
   let old_errorformat = &errorformat
   let &errorformat = a:format
 
   try
     if a:list_type ==# "locationlist"
+      if a:keep_existing_items
+        let l:existing_items = getloclist(0)
+        let l:existing_options = getloclist(0, { 'title': 1})
+        let l:existing_title = has_key(l:existing_options, "title") ? l:existing_options.title : ""
+      endif
+
       lgetexpr a:items
-      call setloclist(0, [], 'a', { 'title': a:title })
+
+      if a:keep_existing_items && l:existing_title != ":    lex []"
+        call setloclist(0, [], 'a', { 'title': l:existing_title . " / " . a:title })
+      else
+        call setloclist(0, [], 'a', { 'title': a:title })
+      endif
+
+      if a:keep_existing_items && len(l:existing_items) > 0
+        call setloclist(0, l:existing_items, 'a')
+      endif
     else
+      if a:keep_existing_items
+        let l:existing_items = getqflist()
+        let l:existing_options = getqflist({ 'title': 1 })
+        let l:existing_title = has_key(l:existing_options, "title") ? l:existing_options.title : ""
+      endif
+
       cgetexpr a:items
-      call setqflist([], 'a', { 'title': a:title })
+
+      if a:keep_existing_items && l:existing_title != ":    cex []"
+        call setqflist([], 'a', { 'title': l:existing_title . " / " . a:title })
+      else
+        call setqflist([], 'a', { 'title': a:title })
+      endif
+
+      if a:keep_existing_items && len(l:existing_items) > 0
+        call setqflist(l:existing_items, 'a')
+      endif
     endif
   finally
     let &errorformat = old_errorformat
@@ -105,7 +135,6 @@ function! swift#list#JumpToFirst(list_type) abort
   endif
 endfunction
 
-" Clean cleans and closes the location list
 function! swift#list#Clean(list_type) abort
   if a:list_type ==# "locationlist"
     lex []
@@ -113,10 +142,10 @@ function! swift#list#Clean(list_type) abort
     cex []
   endif
 
-  call s:close_list(a:list_type)
+  call swift#list#Close(a:list_type)
 endfunction
 
-function! s:close_list(list_type) abort
+function! swift#list#Close(list_type) abort
   if !g:swift_list_autoclose
     return
   endif
@@ -129,17 +158,27 @@ function! s:close_list(list_type) abort
 endfunction
 
 let s:default_list_type_commands = {
-      \ "SwiftBuild":              "quickfix",
+      \ "Autosave":                "",
       \ "SwiftFormat":             "locationlist",
       \ "SwiftLint":               "quickfix",
-      \ "SwiftLintAutoSave":       "locationlist",
-      \ "SwiftTest":               "quickfix",
+      \ "SwiftPMBuild":            "quickfix",
+      \ "SwiftPMTest":             "quickfix",
       \ "_job":                    "locationlist",
       \ }
 
-function! swift#list#Type(for) abort
+function! swift#list#Type(for, on_autosave) abort
   if !empty(g:swift_list_type)
     return g:swift_list_type
+  endif
+
+  if a:on_autosave
+    let l:list_type = get(g:swift_list_type_commands, "Autosave")
+    if empty(l:list_type)
+      let l:list_type =  get(s:default_list_type_commands, "Autosave")
+    endif
+    if !empty(l:list_type)
+      return l:list_type
+    endif
   endif
 
   let l:list_type = get(g:swift_list_type_commands, a:for)

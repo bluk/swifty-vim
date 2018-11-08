@@ -58,6 +58,9 @@ endfunction
 "   'jump_to_error':
 "     Set to 1 to jump to the first error in the error list.
 "     Defaults to 0.
+"   'on_autosave':
+"     Set to 1 if this job is being invoked because the buffer is being saved.
+"     Defaults to 0.
 "   'status_type':
 "     The status type to use when updating the status.
 "   'list_type':
@@ -94,6 +97,7 @@ function! s:job_options(args) abort
         \ 'job_dir': fnameescape(expand("%:p:h")),
         \ 'messages': [],
         \ 'jump_to_error': 0,
+        \ 'on_autosave': 0,
         \ 'list_title': "",
         \ 'list_type': "_job",
         \ 'exited': 0,
@@ -113,6 +117,10 @@ function! s:job_options(args) abort
 
   if has_key(a:args, 'list_type')
     let state.list_type = a:args.list_type
+  endif
+
+  if has_key(a:args, 'on_autosave')
+    let state.on_autosave = a:args.on_autosave
   endif
 
   if has_key(a:args, 'status_type')
@@ -158,7 +166,9 @@ function! s:job_options(args) abort
     call win_gotoid(self.winid)
 
     if a:exit_status == 0 && len(a:data) == 0
-      call swift#list#Clean(self.list_type)
+      if empty(swift#list#Get(self.list_type))
+        call swift#list#Close(self.list_type)
+      endif
       call win_gotoid(l:winid)
       return
     endif
@@ -168,7 +178,7 @@ function! s:job_options(args) abort
     let l:cd = exists('*haslocaldir') && haslocaldir() ? 'lcd' : 'cd'
     try
       execute l:cd self.job_dir
-      call swift#list#ParseFormat(self.list_type, self.errorformat, out, self.list_title)
+      call swift#list#ParseFormat(self.list_type, self.errorformat, out, self.list_title, self.on_autosave)
       let errors = swift#list#Get(self.list_type)
     finally
       execute l:cd fnameescape(self.dir)
@@ -176,7 +186,9 @@ function! s:job_options(args) abort
 
     if empty(errors)
       if a:exit_status == 0
-        call swift#list#Clean(self.list_type)
+        if empty(swift#list#Get(self.list_type))
+          call swift#list#Close(self.list_type)
+        endif
       else
         call swift#echo#EchoError([self.dir] + self.messages)
       endif
