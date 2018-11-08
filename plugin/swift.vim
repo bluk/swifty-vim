@@ -53,6 +53,8 @@ augroup swiftyvim.events
   autocmd BufWritePre *.swift call swift#autosave#Start()
   autocmd BufWritePre *.swift call swift#swiftformat#PreWrite()
   autocmd BufWritePost *.swift call swift#swiftlint#PostWrite()
+  autocmd BufWritePost *.swift call swift#spm#BuildPostWrite()
+  autocmd BufWritePost *.swift call swift#spm#TestPostWrite()
 augroup end
 
 " vim: sw=2 ts=2 et

@@ -44,6 +44,19 @@ function! swift#spm#Build(...) abort
   endif
 endfunction
 
+function! swift#spm#BuildPostWrite() abort
+  if get(g:, "swift_spm_build_autosave", 0) && !get(g:, "swift_spm_test_autosave", 0)
+    if expand('%:p') =~# '.*Tests.*'
+      let l:list_title = "SwiftPMTest"
+    else
+      let l:list_title = "SwiftPMBuild"
+    endif
+    let l:list_type = swift#list#Type(l:list_title, 1)
+    call swift#autosave#CleanIfNeeded(l:list_type)
+    call swift#spm#Build({ "on_autosave": 1 })
+  endif
+endfunction
+
 function! swift#spm#SourceBuild(...) abort
   let l:opts = (a:0 > 0) ? copy(a:1) : {}
   let l:jump_to_error = has_key(l:opts, 'jump_to_error') ? l:opts.jump_to_error
@@ -104,6 +117,15 @@ function! swift#spm#Test(...) abort
         \ 'errorformat': s:format,
         \ 'job_dir': swift#spm#FindPackageSwiftDir(),
         \ })
+endfunction
+
+function! swift#spm#TestPostWrite() abort
+  if get(g:, "swift_spm_test_autosave", 0)
+    let l:list_title = "SwiftPMTest"
+    let l:list_type = swift#list#Type(l:list_title, 1)
+    call swift#autosave#CleanIfNeeded(l:list_type)
+    call swift#spm#Test({ "on_autosave": 1 })
+  endif
 endfunction
 
 function! swift#spm#TestFunctionOnly(opts, ...) abort
