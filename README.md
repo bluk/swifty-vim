@@ -43,6 +43,8 @@ Key mappings and commands such as:
 * `:SwiftPMBuild` to build the current package source or tests.
 * `:SwiftPMTest` to run the package tests.
 * `:SwiftPMTestFunctionOnly` to run the current test under the cursor.
+* `:SwiftPMTestGenerateLinuxMain` to generate the code to run existing tests on Linux.
+* `:SwiftPMGenerateXcodeProject` to generate an Xcode project.
 
 ### SwiftFormat Support
 
@@ -115,4 +117,4 @@ You may be interested in other similar projects:
 [doc_dir]: doc/
 [swift_vim]: https://github.com/keith/swift.vim
 [vim-swift]: https://github.com/toyamarinyon/vim-swift
-[apple_lsp]: https://forums.swift.org/t/new-lsp-language-service-supporting-swift-and-c-family-languages-for-any-editor-and-platform/17024/41
+[apple_lsp]: https://forums.swift.org/t/new-lsp-language-service-supporting-swift-and-c-family-languages-for-any-editor-and-platform/17024
