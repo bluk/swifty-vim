@@ -25,28 +25,28 @@ g:swift_compiler_spm_path~
   Set this option to the path to swift. If unset, "swift" will be located
   in the $PATH: >
 
-	    let g:swiftc_compiler_spm_path = "/usr/bin/swift"
+	    let g:swift_compiler_spm_path = "/usr/bin/swift"
 <
                                                 *g:swift_compiler_spm_options*
 g:swift_compiler_spm_options~
   Set this option to any swift compiler options. If unset, no extra options
   will be passed to swift. Defaults to "build". >
 
-	    let g:swiftc_compiler_spm_options = "build"
+	    let g:swift_compiler_spm_options = "build"
 <
                                                 *g:swift_compiler_swiftc_path*
 g:swift_compiler_swiftc_path~
   Set this option to the path to swiftc. If unset, "swiftc" will be located
   in the $PATH: >
 
-	    let g:swiftc_compiler_swiftc_path = "/usr/bin/swiftc"
+	    let g:swift_compiler_swiftc_path = "/usr/bin/swiftc"
 <
                                              *g:swift_compiler_swiftc_options*
 g:swift_compiler_swiftc_options~
   Set this option to any swiftc compiler options. If unset, no extra options
   will be passed to swiftc. >
 
-	    let g:swiftc_compiler_swiftc_options = "-D DEBUG"
+	    let g:swift_compiler_swiftc_options = "-D DEBUG"
 <
                                  *g:swift_compiler_swiftc_makeprog_no_percent*
 g:swift_compiler_swiftc_makeprog_no_percent~
